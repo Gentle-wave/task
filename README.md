@@ -312,8 +312,68 @@ PORT=5000
   }
 }
 ```
+### User Management
+
+#### 1. Get All Users (Admin Only)
+
+**Endpoint**: `/api/users`  
+**Method**: `GET`  
+**Protected**: Yes (Admin)  
+**Response**:
+```json
+[
+  {
+    "_id": "64f1d1b028ef4e8f9b012345",
+    "name": "John Doe",
+    "email": "john@example.com",
+    "isAdmin": true
+  },
+  {
+    "_id": "64f1d1b028ef4e8f9b012346",
+    "name": "Jane Smith",
+    "email": "jane@example.com",
+    "isAdmin": false
+  }
+]
+```
 
 ---
+
+#### 2. Get User by ID (Admin Only)
+
+**Endpoint**: `/api/users/:id`  
+**Method**: `GET`  
+**Protected**: Yes (Admin)  
+**Response**:
+```json
+{
+  "_id": "64f1d1b028ef4e8f9b012345",
+  "name": "John Doe",
+  "email": "john@example.com",
+  "isAdmin": true
+}
+```
+
+---
+
+## Routes
+
+In the `authRoute.js`, add these routes for getting all users and getting a user by ID:
+
+```js
+const express = require('express');
+const router = express.Router();
+const { getUsers, getUserById } = require('../controllers/userController');
+const { protect, admin } = require('../middleware/authMiddleware');
+
+// Get all users (Admin only)
+router.route('/').get(protect, admin, getUsers);
+
+// Get a user by ID (Admin only)
+router.route('/:id').get(protect, admin, getUserById);
+
+module.exports = router;
+```
 
 ## Error Handling
 
